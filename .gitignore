@@ -1,0 +1,25 @@
+# Dataset archives and derived data
+/data/
+
+# Local environments and Python cache
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Experiments, models, indexes, and request logs
+mlruns/
+models/
+logs/
+*.pkl
+*.joblib
+*.faiss
+*.pt
+*.pth
+
+# Local editor and OS files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
