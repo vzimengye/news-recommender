@@ -2,7 +2,7 @@
 
 ## Project goal
 
-Build a reproducible two-stage news recommendation system using Microsoft News Dataset (MIND-small): retrieval, ranking, FastAPI serving, experiment tracking, and basic monitoring. Follow the milestone plan in `docs/project-plan.md`; implement the smallest end-to-end version first, then improve one component at a time and record measured results. Do not claim metric improvements without running the experiment.
+Build a reproducible two-stage news recommendation system using Microsoft News Dataset (MIND-small): retrieval, ranking, FastAPI serving, experiment tracking, and basic monitoring. Implement the smallest end-to-end version first (data pipeline, then a popularity retrieval + logistic regression baseline with offline evaluation, then serving/tracking/monitoring, then retrieval and ranking upgrades), then improve one component at a time and record measured results. Do not claim metric improvements without running the experiment.
 
 ## Data and licensing
 

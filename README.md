@@ -4,7 +4,7 @@ A learning project for building a reproducible two-stage news recommendation sys
 
 ## Project status
 
-The repository is at the data and project setup stage. The implementation and evaluation tables will be updated as each milestone is completed. See [the project plan](docs/project-plan.md) for the roadmap.
+The repository is at the data and project setup stage. The implementation and evaluation tables will be updated as each milestone is completed; see "Planned system" below for the roadmap.
 
 ## Dataset
 

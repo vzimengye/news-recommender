@@ -23,3 +23,9 @@ logs/
 .vscode/
 .DS_Store
 Thumbs.db
+
+# Private planning and learning notes (not for the public repo)
+*.local.md
+/docs/project-plan.md
+/docs/project-plan.pdf
+/docs/News Recommender Build Plan.md
