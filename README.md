@@ -51,7 +51,24 @@ tests/         Automated checks
 
 ## Development
 
-Python 3.11 is the planned runtime. Install the current dependencies with `python -m pip install -r requirements.txt`. After creating the processed Parquet files with the data parser and sample builder, run `python scripts/data_stats.py` to print train/dev counts, daily exposure and click-through rates, and cold-start statistics. `src/data/split.py` provides a time-ordered holdout function for later training experiments; it does not create a validation file automatically. The generated data stays under the ignored `data/` directory.
+Python 3.11 is the runtime. Create a virtual environment and install the current dependencies:
+
+```text
+python -m venv .venv
+.venv/Scripts/python -m pip install -r requirements.txt   # .venv/bin/python on macOS/Linux
+```
+
+After downloading and extracting the raw archives (see Dataset above), build the candidate-level Parquet samples:
+
+```text
+.venv/Scripts/python scripts/build_dataset.py
+```
+
+This parses `behaviors.tsv`/`news.tsv` for both splits and writes `train_samples.parquet`, `dev_samples.parquet`, and `news.parquet` under `data/processed/` (ignored by Git). Then:
+
+- `.venv/Scripts/python scripts/data_stats.py` prints train/dev counts, daily exposure and click-through rates, and cold-start statistics (how much dev news was never exposed, or never clicked, in train).
+- `src/data/split.py` provides a time-ordered holdout function for later training experiments; it does not create a validation file automatically.
+- `.venv/Scripts/python -m pytest` runs the test suite. One test parses the full raw archives to confirm the official dev split starts after train ends; it is skipped automatically if `data/raw/` has not been populated.
 
 ## Citation
 
