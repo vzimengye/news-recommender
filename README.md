@@ -4,7 +4,7 @@ A learning project for building a reproducible two-stage news recommendation sys
 
 ## Project status
 
-The repository is at the data and project setup stage. The implementation and evaluation tables will be updated as each milestone is completed; see "Planned system" below for the roadmap.
+Raw TSV parsing, candidate-sample generation, dataset statistics, and a time-ordered holdout utility are implemented. Model training, retrieval, and serving are still planned. The implementation and evaluation tables will be updated as each milestone is completed; see "Planned system" below for the roadmap.
 
 ## Dataset
 
@@ -51,7 +51,7 @@ tests/         Automated checks
 
 ## Development
 
-Python 3.11 is the planned runtime. Environment setup and executable commands will be added as the first code milestone is implemented.
+Python 3.11 is the planned runtime. Install the current dependencies with `python -m pip install -r requirements.txt`. After creating the processed Parquet files with the data parser and sample builder, run `python scripts/data_stats.py` to print train/dev counts, daily exposure and click-through rates, and cold-start statistics. `src/data/split.py` provides a time-ordered holdout function for later training experiments; it does not create a validation file automatically. The generated data stays under the ignored `data/` directory.
 
 ## Citation
 
