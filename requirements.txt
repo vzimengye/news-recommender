@@ -1,3 +1,4 @@
 pandas>=2.2,<4.0
 pyarrow>=15,<27
 pytest>=8,<9
+scikit-learn>=1.4,<2.0
