@@ -4,7 +4,29 @@ A learning project for building a reproducible two-stage news recommendation sys
 
 ## Project status
 
-Raw TSV parsing, candidate-sample generation, dataset statistics, and a time-ordered holdout utility are implemented. Model training, retrieval, and serving are still planned. The implementation and evaluation tables will be updated as each milestone is completed; see "Planned system" below for the roadmap.
+The data pipeline (parsing, candidate-sample generation, stats, time-ordered holdout) and a first baseline -- popularity retrieval and a logistic-regression ranker, both evaluated on the official dev split -- are implemented and measured; see Results below. Richer retrieval (item-CF, embeddings) and ranking (LightGBM, Wide & Deep), plus serving/tracking/monitoring, are still planned; see "Planned system" for the roadmap.
+
+## Results
+
+Ranking metrics are impression-averaged over all 73,152 dev impressions. Retrieval recall@K is measured on a random sample of 1,000 dev clicks (the current retriever's per-query cost makes the full ~111k click set impractical to run end to end; see `scripts/evaluate_retrieval.py --sample-size` to change the sample).
+
+**Ranking** (`scripts/evaluate.py`):
+
+| Scorer | AUC | MRR | nDCG@5 | nDCG@10 |
+| --- | --- | --- | --- | --- |
+| Random | 0.5008 | 0.2460 | 0.2239 | 0.2868 |
+| Global popularity (all-time clicks) | 0.5318 | 0.2671 | 0.2460 | 0.3098 |
+| Recent popularity (24h window) | 0.5354 | 0.2688 | 0.2479 | 0.3122 |
+| Logistic regression | 0.6080 | 0.3381 | 0.3226 | 0.3823 |
+
+**Retrieval** (`scripts/evaluate_retrieval.py`):
+
+| Retriever | Recall@50 | Recall@100 | Recall@200 |
+| --- | --- | --- | --- |
+| Random | 0.000 | 0.002 | 0.004 |
+| Popularity (24h window) | 0.042 | 0.085 | 0.114 |
+
+Logistic regression on four causal features (candidate popularity, freshness, category/subcategory affinity, history length) clears both popularity baselines, and popularity retrieval clears random by a wide margin -- confirming the pipeline is sound before adding the item-CF/embedding retrieval and LightGBM/Wide & Deep ranking planned next.
 
 ## Dataset
 
@@ -30,10 +52,10 @@ The official `dev` split is a held-out evaluation set in this project. Any tunin
 
 ## Planned system
 
-1. Parse impression logs into candidate-level examples.
-2. Establish a popularity retrieval baseline and a simple logistic-regression ranker.
+1. ~~Parse impression logs into candidate-level examples.~~ Done -- see Results.
+2. ~~Establish a popularity retrieval baseline and a simple logistic-regression ranker.~~ Done -- see Results.
 3. Compare item-based collaborative filtering and text-embedding retrieval.
-4. Evaluate ranking models and add serving, experiment tracking, and monitoring.
+4. Evaluate richer ranking models (LightGBM, Wide & Deep) and add serving, experiment tracking, and monitoring.
 
 Planned methods are not necessarily implemented yet. Metrics will be reported only after they have been run and checked.
 
@@ -68,6 +90,8 @@ This parses `behaviors.tsv`/`news.tsv` for both splits and writes `train_samples
 
 - `.venv/Scripts/python scripts/data_stats.py` prints train/dev counts, daily exposure and click-through rates, and cold-start statistics (how much dev news was never exposed, or never clicked, in train).
 - `src/data/split.py` provides a time-ordered holdout function for later training experiments; it does not create a validation file automatically.
+- `.venv/Scripts/python scripts/evaluate.py` builds features, trains the logistic-regression ranker on train, and prints the ranking metrics table in Results above.
+- `.venv/Scripts/python scripts/evaluate_retrieval.py` prints the retrieval recall@K table in Results above (`--sample-size` controls how many dev clicks to evaluate on).
 - `.venv/Scripts/python -m pytest` runs the test suite. One test parses the full raw archives to confirm the official dev split starts after train ends; it is skipped automatically if `data/raw/` has not been populated.
 
 ## Citation
