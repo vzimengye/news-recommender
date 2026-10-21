@@ -8,6 +8,8 @@ from datetime import datetime, timedelta
 import numpy as np
 import pandas as pd
 
+from src.features.click_index import build_click_time_index
+
 
 class PopularityRetriever:
     """Ranks news by click count in a trailing time window before query time.
@@ -28,11 +30,7 @@ class PopularityRetriever:
         ``train_samples`` needs ``news_id``, ``time``, ``label`` columns.
         ``news`` needs ``news_id`` and ``first_seen`` columns.
         """
-        clicks = train_samples.loc[train_samples["label"] == 1, ["news_id", "time"]]
-        self._click_times = {
-            news_id: np.sort(pd.to_datetime(group["time"]).to_numpy())
-            for news_id, group in clicks.groupby("news_id", sort=False)
-        }
+        self._click_times = build_click_time_index(train_samples)
         self._first_seen = dict(
             zip(news["news_id"], pd.to_datetime(news["first_seen"]))
         )
